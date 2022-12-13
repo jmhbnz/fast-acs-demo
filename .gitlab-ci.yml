@@ -1,7 +1,7 @@
 stages:
   - Compile
   - Image
- # - scan
+  - Scan
 
 Compile code:
   image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
@@ -27,12 +27,12 @@ Build image:
     - job: Compile code
       artifacts: true
 
-# scan:
-#   stage: scan
-#   script:
-#     - >
-#         curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
-#         https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl
-#     - chmod a+x ./roxctl
-#     - ./roxctl image scan -e $ROX_CENTRAL_ENDPOINT --force --image my.registry/repo/image:latest
-#     - ./roxctl image check -e $ROX_CENTRAL_ENDPOINT --image my.registry/repo/image:latest
+Scan image:
+  stage: Scan
+  script:
+    - >
+        curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
+        https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl
+    - chmod a+x ./roxctl
+    - ./roxctl image scan -e $ROX_CENTRAL_ENDPOINT --force --image $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest
+    - ./roxctl image check -e $ROX_CENTRAL_ENDPOINT --image $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest
