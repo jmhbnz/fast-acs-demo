@@ -8,6 +8,6 @@ This repository is intended to contain several hands on demonstrations for featu
 
 1 - Build integration - Pipeline integration with ~roxctl~ for fast feedback.
 
-2 - Risk profiling - Ranking deployments by risk level to prioritise remediation.
+2 - Network segmentation - Visibility into kubernetes network traffic and policies.
 
-3 - Network segmentation - Visibility into kubernetes network traffic and policies.
+3 - Remediation risk profiling - Ranking deployments by risk level to prioritise remediation.
