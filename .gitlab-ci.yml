@@ -1,11 +1,11 @@
 stages:
-  - compile
-  - push
+  - Compile
+  - Image
  # - scan
 
-compile:
+Compile code:
   image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
-  stage: compile
+  stage: Compile
   script:
     - cd build-integration && ./mvnw package
   artifacts:
@@ -13,9 +13,9 @@ compile:
       - target
     expire_in: 1 week
 
-build:
+Build image:
   image: docker:20.10.16
-  stage: build
+  stage: Image
   services:
     - docker:20.10.16-dind
   script:
