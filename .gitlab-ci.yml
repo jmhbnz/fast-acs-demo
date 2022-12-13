@@ -1,26 +1,32 @@
-#image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
-
 stages:
-  - build
-  - scan
+  - compile
+  # - 
+  # - scan
 
-build:
-  image: docker:20.10.16
-  stage: build
-  services:
-    - docker:20.10.16-dind
+compile:
+  image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
+  stage: compile
   script:
     - cd build-integration && ./mvnw package
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest .
-    - docker push $CI_REGISTRY/jmhbnz/fast-acs-demo/image:latest
+    - ls -la
 
-scan:
-  stage: scan
-  script:
-    - >
-        curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
-        https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl
-    - chmod a+x ./roxctl
-    - ./roxctl image scan -e $ROX_CENTRAL_ENDPOINT --force --image my.registry/repo/image:latest
-    - ./roxctl image check -e $ROX_CENTRAL_ENDPOINT --image my.registry/repo/image:latest
+# build:
+#   image: docker:20.10.16
+#   stage: build
+#   services:
+#     - docker:20.10.16-dind
+#   script:
+#     - cd build-integration && ./mvnw package
+#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#     - docker build -t $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest .
+#     - docker push $CI_REGISTRY/jmhbnz/fast-acs-demo/image:latest
+
+# scan:
+#   stage: scan
+#   script:
+#     - >
+#         curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
+#         https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl
+#     - chmod a+x ./roxctl
+#     - ./roxctl image scan -e $ROX_CENTRAL_ENDPOINT --force --image my.registry/repo/image:latest
+#     - ./roxctl image check -e $ROX_CENTRAL_ENDPOINT --image my.registry/repo/image:latest
