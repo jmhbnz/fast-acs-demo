@@ -8,7 +8,7 @@ compile:
   stage: compile
   script:
     - cd build-integration && ./mvnw package
-    - ls -la
+    - ls -la target/
 
 # build:
 #   image: docker:20.10.16
