@@ -1,25 +1,27 @@
 stages:
   - compile
-  # - 
-  # - scan
+  - push
+ # - scan
 
 compile:
   image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
   stage: compile
   script:
     - cd build-integration && ./mvnw package
-    - ls -la target/
+  artifacts:
+    paths:
+      - target
+    expire_in: 1 week
 
-# build:
-#   image: docker:20.10.16
-#   stage: build
-#   services:
-#     - docker:20.10.16-dind
-#   script:
-#     - cd build-integration && ./mvnw package
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#     - docker build -t $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest .
-#     - docker push $CI_REGISTRY/jmhbnz/fast-acs-demo/image:latest
+build:
+  image: docker:20.10.16
+  stage: build
+  services:
+    - docker:20.10.16-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest .
+    - docker push $CI_REGISTRY/jmhbnz/fast-acs-demo/image:latest
 
 # scan:
 #   stage: scan
