@@ -22,7 +22,7 @@ Build image:
     - ls -la build-integration/
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest .
-    - docker push $CI_REGISTRY/jmhbnz/fast-acs-demo/image:latest
+    - docker push $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest
   needs:
     - job: Compile code
       artifacts: true
