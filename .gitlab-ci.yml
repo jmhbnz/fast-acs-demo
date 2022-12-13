@@ -10,7 +10,7 @@ Compile code:
     - cd build-integration && ./mvnw package
   artifacts:
     paths:
-      - target/
+      - build-integration/target/
     expire_in: 1 week
 
 Build image:
