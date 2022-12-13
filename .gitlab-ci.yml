@@ -1,7 +1,17 @@
 stages:
+  - Check
   - Compile
-  - Image
-  - Scan
+  - Build image
+  - Scan image
+
+Check policy:
+  stage: Check
+  script:
+    - >
+        curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
+        "$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" --output ./roxctl
+    - chmod a+x ./roxctl
+    - ./roxctl deployment check -e $ROX_CENTRAL_ENDPOINT:443 --file deployment.yaml --insecure-skip-tls-verify
 
 Compile code:
   image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
@@ -15,7 +25,7 @@ Compile code:
 
 Build image:
   image: docker:20.10.16
-  stage: Image
+  stage: Build image
   services:
     - docker:20.10.16-dind
   script:
@@ -28,11 +38,11 @@ Build image:
       artifacts: true
 
 Scan image:
-  stage: Scan
+  stage: Scan image
   script:
     - >
         curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
         "$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux" --output ./roxctl
     - chmod a+x ./roxctl
-    - ./roxctl image scan -e $ROX_CENTRAL_ENDPOINT --force --image $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest
-    - ./roxctl image check -e $ROX_CENTRAL_ENDPOINT --image $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest
+    - ./roxctl image scan -e $ROX_CENTRAL_ENDPOINT:443 --force --image $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest
+    - ./roxctl image check -e $ROX_CENTRAL_ENDPOINT:443 --image $CI_REGISTRY/jmhbnz/fast-acs-demo/demo:latest
